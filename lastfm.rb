@@ -4,24 +4,33 @@ require 'rubygems'
 require 'rest_client'
 require 'json'
 
-def find_recently_played(username,apikey)
-  # Output the raw JSON from the request.  Focus on the most recent
-  # track for now.
-  url = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&limit=1&user=#{username}&api_key=#{apikey}&format=json"
+def display_recently_played(entire_parsed_json)
+end
+
+def display_num_tracks(entire_parsed_json)
+end
+
+def display_loved_tracks(entire_parsed_json)
+end
+
+def display_banned_tracks(entire_parsed_json)
+end
+
+def find_results(username,apikey,method,limit)
+  url = "http://ws.audioscrobbler.com/2.0/?method=#{method}#{limit}&user=#{username}&api_key=#{apikey}&format=json"
   response = RestClient.get(url)
   entire_parsed_json = JSON.parse(response)
-  puts entire_parsed_json
+  
+  if method == "user.getrecenttracks"
+    display_recently_played(entire_parsed_json)
+  elsif method == "user.getuserinfo"
+    display_num_tracks(entire_parsed_json)
+  elsif method == "user.getlovedtracks"
+    display_loved_tracks(entire_parsed_json)
+  elsif method == "user.getbannedtracks"
+    display_banned_tracks(entire_parsed_json)
+  end
 end
-
-def find_num_tracks(username,apikey)
-end
-
-def find_loved_tracks(username,apikey)
-end
-
-def find_banned_tracks(username,apikey)
-end
-
 
 # Initial stuff.
 # API key requested to avoid putting mine in the source. :-)
@@ -37,15 +46,27 @@ puts "What would you like to find out about #{username}'s music?\n
   4. Banned tracks."
 choice = gets.chomp.to_i # Hopefully 1 to 4, so an integer.
 
-# Get the user's choice.
+puts "How many requests would you like to see?  Press enter for the default of 50."
+l = gets.chomp
+if l == "" then
+  limit = "&limit=50"
+else
+  limit = "&limit=#{l}"
+end
+
+# Handle the user's choice.
 if choice == 1 then
-  find_recently_played(username,apikey)
+  method = "user.getrecenttracks"
+  find_results(username,apikey,method,limit)
 elsif choice == 2 then
-  find_num_tracks(username,apikey)
+  method = "user.getuserinfo"
+  find_results(username,apikey,method,limit)
 elsif choice == 3 then
-  find_loved_tracks(username,apikey)
+  method = "user.getlovedtracks"
+  find_results(username,apikey,method,limit)
 elsif choice == 4 then
-  find_banned_tracks(username,apikey)
+  method = "user.getbannedtracks"
+  find_results(username,apikey,method,limit)
 else
   puts "Enter a number between 1 and 4."
 end
