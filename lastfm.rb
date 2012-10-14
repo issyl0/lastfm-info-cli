@@ -2,13 +2,15 @@
 # Look at someone's last.fm without opening a web browser.
 require 'rubygems'
 require 'rest_client'
+require 'json'
 
 def find_recently_played(username,apikey)
-  # Output the raw XML from the request.  Focus on the most recent
+  # Output the raw JSON from the request.  Focus on the most recent
   # track for now.
-  url = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&limit=1&user=#{username}&api_key=#{apikey}"
+  url = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&limit=1&user=#{username}&api_key=#{apikey}&format=json"
   response = RestClient.get(url)
-  puts response.body
+  entire_parsed_json = JSON.parse(response)
+  puts entire_parsed_json
 end
 
 def find_num_tracks(username,apikey)
