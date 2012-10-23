@@ -93,7 +93,7 @@ while quit == false do
     6. Quit."
     choice = gets.chomp.to_i # Hopefully 1 to 4, so an integer.
 
-    if choice != 5 || 6 then
+    if choice != 5 && 6 then
       puts "How many requests would you like to see?  Press enter for the default of 50."
       l = gets.chomp
       if l == "" then
