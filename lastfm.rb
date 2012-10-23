@@ -91,7 +91,9 @@ while quit == false do
     4. Banned tracks.\n
     5. Change username.\n
     6. Quit."
-    choice = gets.chomp.to_i # Hopefully 1 to 4, so an integer.
+    # Menu choices are numbers, so assume that whatever the user
+    # enters can be converted to an integer.
+    choice = gets.chomp.to_i
 
     if choice != 5 && choice != 6 then
       puts "How many requests would you like to see?  Press enter for the default of 50."
