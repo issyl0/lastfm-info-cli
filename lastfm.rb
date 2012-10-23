@@ -74,53 +74,37 @@ end
 puts "Enter your API key:"
 apikey = gets.chomp
 
-# Enable changing of the username.
-username_entered = false
-quit = false
-while quit == false do
-  if username_entered == false then
-    puts "Enter a username to find out about:"
-    username = gets.chomp
-    username_entered = true
-  end
+puts "Enter a username to find out about:"
+username = gets.chomp
 
-  puts "What would you like to find out about #{username}'s music?\n
-    1. Recently played tracks.\n
-    2. Number of tracks listened to.\n
-    3. Loved tracks.\n
-    4. Banned tracks.\n
-    5. Change username.\n
-    6. Quit."
-    choice = gets.chomp.to_i # Hopefully 1 to 4, so an integer.
+puts "What would you like to find out about #{username}'s music?\n
+  1. Recently played tracks.\n
+  2. Number of tracks listened to.\n
+  3. Loved tracks.\n
+  4. Banned tracks."
+choice = gets.chomp.to_i # Hopefully 1 to 4, so an integer.
 
-    if choice != 5 || 6 then
-      puts "How many requests would you like to see?  Press enter for the default of 50."
-      l = gets.chomp
-      if l == "" then
-        limit = "&limit=50"
-      else
-        limit = "&limit=#{l}"
-      end
-    end
-    
-    # Handle the user's choice.
-    if choice == 1 then
-      method = "user.getrecenttracks"
-      find_results(username,apikey,method,limit)
-    elsif choice == 2 then
-      method = "user.getinfo"
-      find_results(username,apikey,method,limit)
-    elsif choice == 3 then
-      method = "user.getlovedtracks"
-      find_results(username,apikey,method,limit)
-    elsif choice == 4 then
-      method = "user.getbannedtracks"
-      find_results(username,apikey,method,limit)
-    elsif choice == 5 then
-      username_entered = false
-    elsif choice == 6 then
-      quit = true
-    else
-      puts "Enter a number between 1 and 6."
-    end
+puts "How many requests would you like to see?  Press enter for the default of 50."
+l = gets.chomp
+if l == "" then
+  limit = "&limit=50"
+else
+  limit = "&limit=#{l}"
+end
+
+# Handle the user's choice.
+if choice == 1 then
+  method = "user.getrecenttracks"
+  find_results(username,apikey,method,limit)
+elsif choice == 2 then
+  method = "user.getinfo"
+  find_results(username,apikey,method,limit)
+elsif choice == 3 then
+  method = "user.getlovedtracks"
+  find_results(username,apikey,method,limit)
+elsif choice == 4 then
+  method = "user.getbannedtracks"
+  find_results(username,apikey,method,limit)
+else
+  puts "Enter a number between 1 and 4."
 end
