@@ -16,8 +16,8 @@ def display_recently_played(entire_parsed_json)
     
     trackname = track["name"].to_s
     trackartist = track["artist"]["#text"].to_s
-
-    align_columns(trackname,trackartist)
+    
+    align_columns(trackname,trackartist) 
   end
 end
 
@@ -39,13 +39,11 @@ def display_loved_tracks(entire_parsed_json)
 end
 
 def display_banned_tracks(entire_parsed_json)
-  # Doesn't currently work due to trackartist.
-  puts entire_parsed_json
   entire_parsed_json["bannedtracks"]["track"].each do |track|
-
-    trackname = track[1].to_s
+    
+    trackname = track["name"].to_s
     trackartist = track["artist"]["name"].to_s
-
+    
     align_columns(trackname,trackartist)
   end
 end
@@ -69,10 +67,8 @@ def find_results(username,apikey,method,limit)
   end
 end
 
-# Initial stuff.
-# API key requested to avoid putting mine in the source. :-)
-puts "Enter your API key:"
-apikey = gets.chomp
+# API key.
+apikey = "8fadfb361ea43d4798d8379e5b96349b"
 
 # Enable changing of the username.
 username_entered = false
