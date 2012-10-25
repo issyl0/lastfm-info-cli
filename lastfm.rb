@@ -38,31 +38,41 @@ end
 
 def display_loved_tracks(entire_parsed_json)
   # The specified user's loved tracks.
+
+  tracks = entire_parsed_json["lovedtracks"]["track"]
   
-  if entire_parsed_json["lovedtracks"]["track"] == nil then
-    puts "No loved tracks.\n"
-  else
-    entire_parsed_json["lovedtracks"]["track"].each do |track|
-    
+  if tracks == nil then
+    puts "No loved tracks."
+  elsif tracks.class == Hash # Only one track.
+    trackname = tracks["name"].to_s
+    trackartist = tracks["artist"]["name"].to_s
+  else # Many loved tracks.
+    tracks.each do |track|
       trackname = track["name"].to_s
       trackartist = track["artist"]["name"].to_s
-    
-      align_columns(trackname,trackartist) 
+  
+      align_columns(trackname,trackartist)
     end
   end
+
 end
 
 def display_banned_tracks(entire_parsed_json)
-  # Specified user's banned tracks (currently only > 1).
+  # Specified user's banned tracks.
+  tracks = entire_parsed_json["bannedtracks"]["track"]
   
-  if entire_parsed_json["bannedtracks"]["track"] == nil then
-    puts "No banned tracks.\n"
-  else
-    entire_parsed_json["bannedtracks"]["track"].each do |track|
+  if tracks == nil then
+    puts "No banned tracks."
+  elsif tracks.class == Hash # Only one track.
+    trackname = tracks["name"].to_s
+    trackartist = tracks["artist"]["name"].to_s
     
+    align_columns(trackname,trackartist)
+  else # Many banned tracks.
+    tracks.each do |track|
       trackname = track["name"].to_s
       trackartist = track["artist"]["name"].to_s
-    
+  
       align_columns(trackname,trackartist)
     end
   end
