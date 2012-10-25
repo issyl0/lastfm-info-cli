@@ -127,7 +127,7 @@ while quit == false do
     # enters can be converted to an integer.
     choice = gets.chomp.to_i
 
-    if choice != 5 && choice != 6 then
+    if choice != 2 && choice != 5 && choice != 6 then
       puts "How many requests would you like to see?  Press enter for the default of 50."
       l = gets.chomp
       if l == "" then
