@@ -46,6 +46,8 @@ def display_loved_tracks(entire_parsed_json)
   elsif tracks.class == Hash # Only one track.
     trackname = tracks["name"].to_s
     trackartist = tracks["artist"]["name"].to_s
+    
+    align_columns(trackname,trackartist)
   else # Many loved tracks.
     tracks.each do |track|
       trackname = track["name"].to_s
