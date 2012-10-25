@@ -36,7 +36,7 @@ def display_num_tracks(entire_parsed_json)
   end
 end
 
-def json_tracks(entire_parsed_json, track_kind)
+def json_tracks(entire_parsed_json,track_kind)
   # Get the tracks.
   
   tracks = entire_parsed_json[track_kind]["track"]
