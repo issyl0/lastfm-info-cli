@@ -36,47 +36,51 @@ def display_num_tracks(entire_parsed_json)
   end
 end
 
+def json_tracks(entire_parsed_json, track_kind)
+  # Get the tracks.
+  
+  tracks = entire_parsed_json[track_kind]["track"]
+  
+  if tracks == nil
+    return false
+  end
+  if tracks.class == Hash then # Make it an array.
+    tracks = [tracks]
+  end
+  tracks.each do |track|
+    # Yield calls the specified function after it in
+    # display_banned_tracks() or display_loved_tracks()
+    # (align_columns(trackname, trackartist) in this case) and fills
+    # in its parameters.
+    yield track["name"].to_s, track["artist"]["name"].to_s
+    # True if not false (i.e. nil, above).
+    true
+  end
+end
+
 def display_loved_tracks(entire_parsed_json)
   # The specified user's loved tracks.
 
-  tracks = entire_parsed_json["lovedtracks"]["track"]
-  
-  if tracks == nil then
-    puts "No loved tracks."
-  elsif tracks.class == Hash # Only one track.
-    trackname = tracks["name"].to_s
-    trackartist = tracks["artist"]["name"].to_s
-    
-    align_columns(trackname,trackartist)
-  else # Many loved tracks.
-    tracks.each do |track|
-      trackname = track["name"].to_s
-      trackartist = track["artist"]["name"].to_s
-  
-      align_columns(trackname,trackartist)
-    end
+  # Call this function to get the data and align the returned data.
+  return_value = json_tracks(entire_parsed_json, "lovedtracks") do |trackname, trackartist|
+    align_columns(trackname, trackartist)
   end
-
+  # If false, inform the user of the lack of tracks.
+  if return_value == false
+    puts "No loved tracks.\n"
+  end
 end
 
 def display_banned_tracks(entire_parsed_json)
   # Specified user's banned tracks.
-  tracks = entire_parsed_json["bannedtracks"]["track"]
   
-  if tracks == nil then
-    puts "No banned tracks."
-  elsif tracks.class == Hash # Only one track.
-    trackname = tracks["name"].to_s
-    trackartist = tracks["artist"]["name"].to_s
-    
-    align_columns(trackname,trackartist)
-  else # Many banned tracks.
-    tracks.each do |track|
-      trackname = track["name"].to_s
-      trackartist = track["artist"]["name"].to_s
-  
-      align_columns(trackname,trackartist)
-    end
+  # Call this function to get the data and align the returned data.
+  return_value = json_tracks(entire_parsed_json, "bannedtracks") do |trackname, trackartist|
+    align_columns(trackname, trackartist)
+  end
+  # If false, inform the user of the lack of tracks.
+  if return_value == false
+    puts "No banned tracks.\n"
   end
 end
 
