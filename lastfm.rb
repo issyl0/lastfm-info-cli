@@ -138,23 +138,16 @@ while quit == false do
     end
     
     # Handle the user's choice.
-    if choice == 1 then
-      method = "user.getrecenttracks"
-      find_results(username,apikey,method,limit)
-    elsif choice == 2 then
-      method = "user.getinfo"
-      find_results(username,apikey,method,limit)
-    elsif choice == 3 then
-      method = "user.getlovedtracks"
-      find_results(username,apikey,method,limit)
-    elsif choice == 4 then
-      method = "user.getbannedtracks"
-      find_results(username,apikey,method,limit)
-    elsif choice == 5 then
-      username_entered = false
-    elsif choice == 6 then
-      quit = true
-    else
-      puts "Enter a number between 1 and 6."
+    case choice
+      when (1..4) # Options one to four.
+        choices = ["getrecenttracks", "getinfo", "getlovedtracks", "getbannedtracks"]
+        # Choice 4 would be choice 3 in the array (getbannedtracks).
+        find_results(username,apikey,"user.#{choices[choice-1]}",limit)
+      when 5
+        username_entered = false
+      when 6
+        quit = true
+      else
+        puts "Enter a number between 1 and 6."
     end
 end
