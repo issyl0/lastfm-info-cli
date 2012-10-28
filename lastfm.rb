@@ -10,32 +10,6 @@ def align_columns(trackname,trackartist)
   puts trackname + spaces + trackartist
 end
 
-def display_recently_played(entire_parsed_json)
-  # Display recent tracks for the specified user.
-  if entire_parsed_json["recenttracks"]["track"] == nil then
-    puts "No recent tracks.\n"
-  else
-    entire_parsed_json["recenttracks"]["track"].each do |track|
-    
-      trackname = track["name"].to_s
-      trackartist = track["artist"]["#text"].to_s
-    
-      align_columns(trackname,trackartist) 
-    end
-  end
-end
-
-def display_num_tracks(entire_parsed_json)
-  # Capitalise the username for aesthetic value.  Print it and the
-  # user's play count.
-  
-  if entire_parsed_json["user"]["playcount"] == nil then
-    puts "No tracks played.\n"
-  else
-    puts entire_parsed_json["user"]["name"].to_s.capitalize + "'s play count:\t" + entire_parsed_json["user"]["playcount"].to_s
-  end
-end
-
 def json_tracks(entire_parsed_json,track_kind)
   # Get the tracks.
   
@@ -48,13 +22,40 @@ def json_tracks(entire_parsed_json,track_kind)
     tracks = [tracks]
   end
   tracks.each do |track|
-    # Yield calls the specified function after it in
-    # display_banned_tracks() or display_loved_tracks()
+    # Yield calls the specified function after it
     # (align_columns(trackname, trackartist) in this case) and fills
     # in its parameters.
-    yield track["name"].to_s, track["artist"]["name"].to_s
+    if track_kind == "recenttracks" then
+      yield track["name"].to_s, track["artist"]["#text"].to_s
+    else
+      yield track["name"].to_s, track["artist"]["name"].to_s
+    end
     # True if not false (i.e. nil, above).
     true
+  end
+end
+
+def display_recently_played(entire_parsed_json)
+  # Display recent tracks for the specified user.
+  
+  # Call this function to get the data and align the returned data.
+  return_value = json_tracks(entire_parsed_json, "recenttracks") do |trackname, trackartist|
+    align_columns(trackname, trackartist)
+  end
+  # If false, inform the user of the lack of tracks.
+  if return_value == false
+    puts "No tracks have been listened to recently.\n"
+  end
+end
+
+def display_num_tracks(entire_parsed_json)
+  # Capitalise the username for aesthetic value.  Print it and the
+  # user's play count.
+  
+  if entire_parsed_json["user"]["playcount"] == nil then
+    puts "No tracks played.\n"
+  else
+    puts entire_parsed_json["user"]["name"].to_s.capitalize + "'s play count:\t" + entire_parsed_json["user"]["playcount"].to_s
   end
 end
 
