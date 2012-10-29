@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
+require 'optparse'
 
 def align_columns(trackname,trackartist)
   column_width = 70
@@ -104,35 +105,42 @@ def find_results(username,apikey,method,limit)
   end
 end
 
+def get_username()
+  puts "Enter a username to find out about:"
+  return gets.chomp
+end
+
 # API key.
 apikey = "8fadfb361ea43d4798d8379e5b96349b"
 
-# Enable changing of the username.
-username_entered = false
+options = ARGV.getopts("u:")
+# Username from the command line (-u).
+# Ask if not specified.
+if options["u"] then
+  username = options["u"]
+else
+  puts "Enter a username to find out about:"
+  username = gets.chomp
+end
+
 quit = false
 while quit == false do
-  if username_entered == false then
-    puts "Enter a username to find out about:"
-    username = gets.chomp
-    username_entered = true
-  end
-
-  puts "What would you like to find out about #{username}'s music?\n
-    1. Recently played tracks.\n
-    2. Number of tracks listened to.\n
-    3. Loved tracks.\n
-    4. Banned tracks.\n
-    5. Change username.\n
+  puts "What would you like to find out about #{username}'s music?
+    1. Recently played tracks.
+    2. Number of tracks listened to.
+    3. Loved tracks.
+    4. Banned tracks.
+    5. Change username.
     6. Quit."
     # Menu choices are numbers, so assume that whatever the user
     # enters can be converted to an integer.
     choice = gets.chomp.to_i
 
     if choice != 2 && choice != 5 && choice != 6 then
-      puts "How many requests would you like to see?  Press enter for the default of 50."
+      puts "How many requests would you like to see?  Press enter for the default of 10."
       l = gets.chomp
       if l == "" then
-        limit = "&limit=50"
+        limit = "&limit=10"
       else
         limit = "&limit=#{l}"
       end
@@ -145,7 +153,7 @@ while quit == false do
         # Choice 4 would be choice 3 in the array (getbannedtracks).
         find_results(username,apikey,"user.#{choices[choice-1]}",limit)
       when 5
-        username_entered = false
+        username = get_username()
       when 6
         quit = true
       else
